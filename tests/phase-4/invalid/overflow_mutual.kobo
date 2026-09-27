@@ -1,0 +1,10 @@
+fun ping() {
+  return pong();
+}
+
+fun pong() {
+  return ping();
+}
+
+ping();
+// [line 6] Runtime error: Stack overflow.

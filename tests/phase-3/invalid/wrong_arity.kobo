@@ -1,0 +1,5 @@
+fun pair(a, b) {
+  return a + b;
+}
+pair(1, 2, 3);
+// [line 4] Runtime error: Expected 2 arguments but got 3.

@@ -1,0 +1,9 @@
+fun reader() {
+  return hidden;
+}
+
+{
+  var hidden = "caller local";
+  print reader();
+}
+// [line 2] Runtime error: Variable 'hidden' is not defined.

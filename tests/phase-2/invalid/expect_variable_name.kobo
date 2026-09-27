@@ -1,0 +1,2 @@
+var 123 = 1;
+// [line 1] Error at '123': Expect variable name.

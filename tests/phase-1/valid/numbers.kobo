@@ -1,0 +1,12 @@
+0 123 12.75 0.5
+100.001
+-5
+
+// expect: [line 1] NUMBER '0'
+// expect: [line 1] NUMBER '123'
+// expect: [line 1] NUMBER '12.75'
+// expect: [line 1] NUMBER '0.5'
+// expect: [line 2] NUMBER '100.001'
+// expect: [line 3] MINUS '-'
+// expect: [line 3] NUMBER '5'
+// expect: [line 3] EOF ''

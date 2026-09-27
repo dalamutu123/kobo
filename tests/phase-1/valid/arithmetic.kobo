@@ -1,0 +1,22 @@
+1 + 2;
+3 - 4;
+5 * 6;
+7 / 8;
+
+// expect: [line 1] NUMBER '1'
+// expect: [line 1] PLUS '+'
+// expect: [line 1] NUMBER '2'
+// expect: [line 1] SEMICOLON ';'
+// expect: [line 2] NUMBER '3'
+// expect: [line 2] MINUS '-'
+// expect: [line 2] NUMBER '4'
+// expect: [line 2] SEMICOLON ';'
+// expect: [line 3] NUMBER '5'
+// expect: [line 3] STAR '*'
+// expect: [line 3] NUMBER '6'
+// expect: [line 3] SEMICOLON ';'
+// expect: [line 4] NUMBER '7'
+// expect: [line 4] SLASH '/'
+// expect: [line 4] NUMBER '8'
+// expect: [line 4] SEMICOLON ';'
+// expect: [line 4] EOF ''

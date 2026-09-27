@@ -1,0 +1,10 @@
+var x = 1;
+{
+  var x = 2;
+  {
+    var x = 3;
+    print x;               // expect: 3
+  }
+  print x;                 // expect: 2
+}
+print x;                   // expect: 1

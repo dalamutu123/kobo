@@ -1,0 +1,9 @@
+print (1);
+print ((1));
+print (1 + 2) * (3 + 4);
+print 2 * (3 + 4) - 5;
+
+// expect: (print (group 1))
+// expect: (print (group (group 1)))
+// expect: (print (* (group (+ 1 2)) (group (+ 3 4))))
+// expect: (print (- (* 2 (group (+ 3 4))) 5))

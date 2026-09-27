@@ -1,0 +1,3 @@
+// Spec 2.1: false and nil are false, every other value is true -- 0 included.
+// A scanner-and-parser transcribed from C or Python gets this backwards.
+if (0) print "bad"; else print "good";     // expect: bad

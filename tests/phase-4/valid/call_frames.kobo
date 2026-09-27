@@ -1,0 +1,14 @@
+fun inner(x, y) {
+  return x + "|" + y;
+}
+
+fun outer(a, b) {
+  return inner(b, a);
+}
+
+fun three(a, b, c) {
+  return outer(a, b) + "|" + c;
+}
+
+print outer("first", "second");          // expect: second|first
+print three("a", "b", "c");              // expect: b|a|c

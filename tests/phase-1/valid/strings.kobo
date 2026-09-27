@@ -1,0 +1,12 @@
+"hello"
+""
+"spaces and ; { } + symbols"
+"123"
+"a\nb"
+
+// expect: [line 1] STRING '"hello"'
+// expect: [line 2] STRING '""'
+// expect: [line 3] STRING '"spaces and ; { } + symbols"'
+// expect: [line 4] STRING '"123"'
+// expect: [line 5] STRING '"a\\nb"'
+// expect: [line 5] EOF ''

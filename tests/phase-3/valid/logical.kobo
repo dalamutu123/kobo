@@ -1,0 +1,7 @@
+print nil or "fallback";   // expect: fallback
+print "first" or "second"; // expect: first
+print 0 and 1;             // expect: 1
+print false and 1;         // expect: false
+print nil and 1;           // expect: nil
+print false or nil;        // expect: nil
+print 1 + 1 == 2 and 2 * 2 == 4;   // expect: true

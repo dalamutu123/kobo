@@ -1,0 +1,7 @@
+fun down(n) {
+  if (n <= 0) return "bottom";
+  return down(n - 1);
+}
+
+print down(150);           // expect: bottom
+print down(0);             // expect: bottom

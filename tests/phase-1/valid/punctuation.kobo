@@ -1,0 +1,9 @@
+( ) { } , ;
+
+// expect: [line 1] LPAREN '('
+// expect: [line 1] RPAREN ')'
+// expect: [line 1] LBRACE '{'
+// expect: [line 1] RBRACE '}'
+// expect: [line 1] COMMA ','
+// expect: [line 1] SEMICOLON ';'
+// expect: [line 1] EOF ''

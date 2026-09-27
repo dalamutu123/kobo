@@ -1,0 +1,15 @@
+print 1;
+print 12.75;
+print "text";
+print true;
+print false;
+print nil;
+print x;
+
+// expect: (print 1)
+// expect: (print 12.75)
+// expect: (print "text")
+// expect: (print true)
+// expect: (print false)
+// expect: (print nil)
+// expect: (print x)

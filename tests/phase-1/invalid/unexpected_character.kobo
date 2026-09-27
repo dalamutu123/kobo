@@ -1,0 +1,3 @@
+var x = 1;
+x = x # 2;
+// [line 2] Error: Character is not part of any token.

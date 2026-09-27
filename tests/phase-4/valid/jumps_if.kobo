@@ -1,0 +1,17 @@
+fun classify(n) {
+  if (n < 0) {
+    return "negative";
+  } else {
+    if (n == 0) {
+      return "zero";
+    } else {
+      return "positive";
+    }
+  }
+}
+
+print classify(-5);        // expect: negative
+print classify(0);         // expect: zero
+print classify(7);         // expect: positive
+
+if (true) if (false) print "no"; else print "inner else";  // expect: inner else

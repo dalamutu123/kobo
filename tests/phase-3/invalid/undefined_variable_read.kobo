@@ -1,0 +1,2 @@
+print missing;
+// [line 1] Runtime error: Variable 'missing' is not defined.

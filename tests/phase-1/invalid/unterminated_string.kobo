@@ -1,0 +1,3 @@
+var name = "Kobo;
+print name;
+// [line 1] Error: String is never closed.

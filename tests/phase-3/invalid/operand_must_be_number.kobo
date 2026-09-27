@@ -1,0 +1,2 @@
+print -"x";
+// [line 1] Runtime error: Operand must be a number.

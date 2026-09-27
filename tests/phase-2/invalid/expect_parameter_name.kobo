@@ -1,0 +1,2 @@
+fun f(a, ) { print 1; }
+// [line 1] Error at ')': Expect parameter name.

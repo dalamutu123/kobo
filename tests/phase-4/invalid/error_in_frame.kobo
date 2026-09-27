@@ -1,0 +1,5 @@
+fun a() { return b(); }
+fun b() { return c(); }
+fun c() { return 1 / 0; }
+print a();
+// [line 3] Runtime error: Division by zero.

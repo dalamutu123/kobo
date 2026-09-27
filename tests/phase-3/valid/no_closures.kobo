@@ -1,0 +1,10 @@
+var shared = "global";
+
+fun reader() {
+  return shared;
+}
+
+{
+  var hidden = "caller local";
+  print reader();          // expect: global
+}

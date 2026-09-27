@@ -1,0 +1,2 @@
+missing = 1;
+// [line 1] Runtime error: Variable 'missing' is not defined.

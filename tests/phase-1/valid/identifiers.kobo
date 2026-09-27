@@ -1,0 +1,19 @@
+a Z _ _x x1 snake_case CamelCase
+printer orange android variable iffy
+Print PRINT
+
+// expect: [line 1] IDENTIFIER 'a'
+// expect: [line 1] IDENTIFIER 'Z'
+// expect: [line 1] IDENTIFIER '_'
+// expect: [line 1] IDENTIFIER '_x'
+// expect: [line 1] IDENTIFIER 'x1'
+// expect: [line 1] IDENTIFIER 'snake_case'
+// expect: [line 1] IDENTIFIER 'CamelCase'
+// expect: [line 2] IDENTIFIER 'printer'
+// expect: [line 2] IDENTIFIER 'orange'
+// expect: [line 2] IDENTIFIER 'android'
+// expect: [line 2] IDENTIFIER 'variable'
+// expect: [line 2] IDENTIFIER 'iffy'
+// expect: [line 3] IDENTIFIER 'Print'
+// expect: [line 3] IDENTIFIER 'PRINT'
+// expect: [line 3] EOF ''

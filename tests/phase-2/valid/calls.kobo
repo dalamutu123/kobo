@@ -1,0 +1,11 @@
+f();
+f(1);
+f(1, 2 + 3);
+f(1)(2);
+g(h(1));
+
+// expect: (expr (call f))
+// expect: (expr (call f 1))
+// expect: (expr (call f 1 (+ 2 3)))
+// expect: (expr (call (call f 1) 2))
+// expect: (expr (call g (call h 1)))

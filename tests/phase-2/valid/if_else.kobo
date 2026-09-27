@@ -1,0 +1,7 @@
+if (true) print 1;
+if (false) print 1; else print 2;
+if (1 < 2) { print 3; } else { print 4; }
+
+// expect: (if true (print 1))
+// expect: (if false (print 1) (print 2))
+// expect: (if (< 1 2) (block (print 3)) (block (print 4)))

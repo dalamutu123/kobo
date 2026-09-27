@@ -1,0 +1,9 @@
+fun noop() {}
+fun greet(name) { print name; }
+fun add(a, b) { return a + b; }
+fun stop() { return; }
+
+// expect: (fun noop ())
+// expect: (fun greet (name) (print name))
+// expect: (fun add (a b) (return (+ a b)))
+// expect: (fun stop () (return))

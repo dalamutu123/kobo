@@ -1,0 +1,3 @@
+if (false) if (true) print "a"; else print "b";
+print "the else belongs to the inner if";
+// expect: the else belongs to the inner if

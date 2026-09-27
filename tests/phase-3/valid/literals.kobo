@@ -1,0 +1,5 @@
+print nil;                 // expect: nil
+print true;                // expect: true
+print false;               // expect: false
+print "hello";             // expect: hello
+print "";                  // expect:

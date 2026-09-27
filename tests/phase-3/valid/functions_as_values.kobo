@@ -1,0 +1,12 @@
+fun double(n) {
+  return n * 2;
+}
+
+fun apply(f, n) {
+  return f(n);
+}
+
+print double;              // expect: <fn double>
+var alias = double;
+print alias(21);           // expect: 42
+print apply(double, 5);    // expect: 10

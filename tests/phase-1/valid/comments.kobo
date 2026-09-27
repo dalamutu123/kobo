@@ -1,0 +1,12 @@
+// a comment on its own line
+print 1;   // and one after a statement
+// another
+print 2;
+
+// expect: [line 2] PRINT 'print'
+// expect: [line 2] NUMBER '1'
+// expect: [line 2] SEMICOLON ';'
+// expect: [line 4] PRINT 'print'
+// expect: [line 4] NUMBER '2'
+// expect: [line 4] SEMICOLON ';'
+// expect: [line 4] EOF ''

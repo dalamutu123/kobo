@@ -1,0 +1,12 @@
+[package]
+name = "kobo"
+version = "0.1.0"
+edition = "2021"
+
+# Zero dependencies, deliberately. Students must be able to build this offline on a
+# vendored toolchain, and every line of the compiler has to be one they could have
+# written themselves.
+[dependencies]
+
+[profile.dev]
+panic = "abort"

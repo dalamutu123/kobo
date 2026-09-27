@@ -1,0 +1,2 @@
+print 1 < "two";
+// [line 1] Runtime error: Operands must be numbers.

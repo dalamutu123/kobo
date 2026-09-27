@@ -1,0 +1,5 @@
+print "a" + "b";           // expect: ab
+print "a" + "b" + "c";     // expect: abc
+print "" + "x";            // expect: x
+var greeting = "Hello, ";
+print greeting + "Kobo";   // expect: Hello, Kobo

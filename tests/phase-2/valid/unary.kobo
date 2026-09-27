@@ -1,0 +1,13 @@
+print -1;
+print !true;
+print !!false;
+print - -3;
+print -1 + 2;
+print -1 * 2;
+
+// expect: (print (- 1))
+// expect: (print (! true))
+// expect: (print (! (! false)))
+// expect: (print (- (- 3)))
+// expect: (print (+ (- 1) 2))
+// expect: (print (* (- 1) 2))

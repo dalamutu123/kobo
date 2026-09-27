@@ -1,0 +1,2 @@
+fun f(a b) { print 1; }
+// [line 1] Error at 'b': Expect ')' after parameters.

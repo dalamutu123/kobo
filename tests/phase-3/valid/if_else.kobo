@@ -1,0 +1,4 @@
+if (1 > 0) print "yes";    // expect: yes
+if (nil) print "bad"; else print "ok";     // expect: ok
+if (0) print "zero is true";               // expect: zero is true
+if (false) { print "no"; } else { print "else branch"; }   // expect: else branch

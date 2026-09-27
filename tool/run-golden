@@ -1,0 +1,208 @@
+#!/usr/bin/env python3
+"""Golden-file test runner for Kobo.
+
+A test is a .kobo program that carries its own expected output in comments:
+
+    print 2 + 3 * 4;        // expect: 14
+    print "oops" + 1;       // [line 2] Runtime error: Operands must be ...
+
+`// expect:` lines are the expected standard output, in order and complete — anything
+extra on stdout fails. `// [line N] ...` lines must each appear on standard error. The
+expected exit code follows from them: 70 if any runtime error is expected, 65 if any
+scan or parse error is, 0 otherwise.
+
+The runner never looks inside the compiler. It runs the binary and reads what came out,
+which is the only way one harness can mark 150 different implementations.
+
+    tool/run-golden smoke
+    tool/run-golden phase-1 --bin path/to/their/binary
+    tool/run-golden phase-4 --arg=--vm      # mark the same suite on the bytecode VM
+
+A suite may carry a `suite.args` file of flags it cannot be marked without: phase 1 is
+read through `--tokens` and phase 2 through `--ast` (spec §6.1), because a scanner prints
+nothing and a parser prints nothing. Those are applied first, so anything given with
+`--arg` still wins.
+
+**This runner marks whatever suite it is pointed at, and it has no idea which tests
+exist somewhere else.** That is deliberate: the tests in your repository are the ones it
+runs, and the number it prints is the number they give. Your mark is taken over a larger
+set, which is what each brief means by hidden tests.
+
+What it does do is **say which set it just ran**, so the number never has to be
+inferred from a denominator. Read that line, then read `docs/language-spec.md`: the
+specification is what the marking set is written from, and it is the thing to write
+your compiler against.
+"""
+
+import argparse
+import os
+import re
+import subprocess
+import sys
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+TIMEOUT_SECONDS = 5
+
+
+def default_bin():
+    """Where the compiler is: `target/debug/kobo`, under whichever crate root this sits in.
+
+    Your crate is at the root of the repository, so that is the one it finds.
+    """
+    nested = os.path.join(ROOT, "reference", "Cargo.toml")
+    crate = os.path.join(ROOT, "reference") if os.path.exists(nested) else ROOT
+    return os.path.join(crate, "target", "debug", "kobo.exe" if os.name == "nt" else "kobo")
+
+
+DEFAULT_BIN = default_bin()
+BUILD_HINT = ("cd reference && cargo build" if os.path.exists(
+    os.path.join(ROOT, "reference", "Cargo.toml")) else "cargo build")
+
+EXPECT = re.compile(r"//\s*expect:\s?(.*)$")
+EXPECT_ERROR = re.compile(r"//\s*(\[line \d+\].*)$")
+
+GREEN, RED, DIM, RESET = "\033[32m", "\033[31m", "\033[2m", "\033[0m"
+if not sys.stdout.isatty():
+    GREEN = RED = DIM = RESET = ""
+
+
+def expectations(path):
+    """(stdout lines, stderr lines, exit code) a test file asks for."""
+    out, err = [], []
+    with open(path, encoding="utf-8") as f:
+        for line in f:
+            line = line.rstrip("\n")
+            m = EXPECT_ERROR.search(line)
+            if m:
+                err.append(m.group(1).strip())
+                continue
+            m = EXPECT.search(line)
+            if m:
+                out.append(m.group(1))
+    if any("Runtime error:" in e for e in err):
+        code = 70
+    elif err:
+        code = 65
+    else:
+        code = 0
+    return out, err, code
+
+
+def suite_args(root):
+    """Flags the suite itself requires, one per line in `suite.args`, `#` for a comment."""
+    path = os.path.join(root, "suite.args")
+    if not os.path.exists(path):
+        return []
+    with open(path, encoding="utf-8") as f:
+        return [a for a in (l.split("#", 1)[0].strip() for l in f) if a]
+
+
+def tests_in(root):
+    """Every .kobo program in a suite, in a fixed order so two runs mark alike."""
+    return sorted(os.path.join(d, f)
+                  for d, _, fs in os.walk(root) for f in fs if f.endswith(".kobo"))
+
+
+def run_one(binary, path, extra=(), timeout=None):
+    """(passed, list of complaint strings)."""
+    timeout = TIMEOUT_SECONDS if timeout is None else timeout
+    want_out, want_err, want_code = expectations(path)
+    try:
+        p = subprocess.run([binary] + list(extra) + [path], capture_output=True,
+                           text=True, timeout=timeout)
+    except subprocess.TimeoutExpired:
+        return False, ["timed out after %ds" % timeout]
+    except OSError as e:
+        return False, ["could not run %s: %s" % (binary, e)]
+
+    got_out = p.stdout.split("\n")
+    if got_out and got_out[-1] == "":
+        got_out.pop()
+    got_err = [l.strip() for l in p.stderr.split("\n") if l.strip()]
+
+    bad = []
+    if got_out != want_out:
+        for i in range(max(len(want_out), len(got_out))):
+            w = want_out[i] if i < len(want_out) else "<nothing>"
+            g = got_out[i] if i < len(got_out) else "<nothing>"
+            if w != g:
+                bad.append("stdout line %d: expected %r, got %r" % (i + 1, w, g))
+    for w in want_err:
+        if w not in got_err:
+            bad.append("stderr: expected %r" % w)
+    if p.returncode != want_code:
+        bad.append("exit code: expected %d, got %d" % (want_code, p.returncode))
+    return not bad, bad
+
+
+def marking_suites():
+    """{suite: how many tests it is MARKED on}, or {} when this tree cannot know.
+
+    Both outcomes are correct and neither is an error.
+    """
+    try:
+        sys.path.insert(0, os.path.join(ROOT, "tool"))
+        import manifest
+    except ImportError:
+        return {}
+    return {s: len(manifest.hidden_in(s))
+            for ca in manifest.CA_ORDER for s, _ in manifest.PHASES[ca]}
+
+
+def coverage_note(suite, ran):
+    hidden = marking_suites()
+    if suite not in hidden and hidden:
+        return "these %d tests are the whole of suite %s" % (ran, suite)
+    if hidden:
+        n = hidden[suite]
+        return ("%d of these are also the self-check students get; %d more are marked "
+                "and not published" % (ran - n, n))
+    return ("These are the tests you were given. Your mark is taken over a larger set "
+            "that includes tests you have not seen, so a green suite is a floor and not "
+            "a total: docs/language-spec.md is the contract, not this directory.")
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("suite", help="a directory under tests/, e.g. smoke or phase-1")
+    ap.add_argument("--bin", default=os.environ.get("KOBO_BIN", DEFAULT_BIN),
+                    help="compiler binary to test (default: the reference build)")
+    ap.add_argument("--arg", action="append", default=[],
+                    help="extra flag for the binary, before the file; repeatable. "
+                         "Write it joined, as --arg=--vm, or argparse eats the value.")
+    args = ap.parse_args()
+
+    root = os.path.join(ROOT, "tests", args.suite)
+    if not os.path.isdir(root):
+        sys.exit("no such suite: tests/%s" % args.suite)
+    if not os.path.exists(args.bin):
+        sys.exit("no binary at %s — build it first (%s)" % (args.bin, BUILD_HINT))
+
+    tests = tests_in(root)
+    if not tests:
+        sys.exit("tests/%s contains no .kobo files" % args.suite)
+
+    extra = suite_args(root) + args.arg
+
+    passed = 0
+    for path in tests:
+        name = os.path.relpath(path, root)
+        ok, bad = run_one(args.bin, path, extra)
+        if ok:
+            passed += 1
+            print("%sPASS%s  %s" % (GREEN, RESET, name))
+        else:
+            print("%sFAIL%s  %s" % (RED, RESET, name))
+            for b in bad:
+                print("      %s%s%s" % (DIM, b, RESET))
+
+    total = len(tests)
+    how = " ".join(extra)
+    print("\n%d/%d passed  (%.0f%%)%s"
+          % (passed, total, 100.0 * passed / total, "  [%s]" % how if how else ""))
+    print(coverage_note(args.suite, total))
+    sys.exit(0 if passed == total else 1)
+
+
+if __name__ == "__main__":
+    main()

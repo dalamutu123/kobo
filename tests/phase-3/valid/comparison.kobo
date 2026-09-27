@@ -1,0 +1,7 @@
+print 1 < 2;               // expect: true
+print 2 <= 2;              // expect: true
+print 3 > 4;               // expect: false
+print 4 >= 4;              // expect: true
+print 1 + 2 < 4;           // expect: true
+print 1 * 2 < 3 + 4;       // expect: true
+print 2 * 3 > 1 + 4;       // expect: true

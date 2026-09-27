@@ -1,0 +1,19 @@
+var a;
+a = 1 or 2;
+print 1 or 2 and 3;
+print 1 and 2 == 3;
+print 1 == 2 < 3;
+print 1 < 2 + 3;
+print 1 + 2 * 3;
+print 1 * -2;
+print -f(1);
+
+// expect: (var a)
+// expect: (expr (= a (or 1 2)))
+// expect: (print (or 1 (and 2 3)))
+// expect: (print (and 1 (== 2 3)))
+// expect: (print (== 1 (< 2 3)))
+// expect: (print (< 1 (+ 2 3)))
+// expect: (print (+ 1 (* 2 3)))
+// expect: (print (* 1 (- 2)))
+// expect: (print (- (call f 1)))

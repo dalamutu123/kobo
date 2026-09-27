@@ -1,0 +1,9 @@
+var a;
+var b;
+a = 1;
+a = b = 2;
+
+// expect: (var a)
+// expect: (var b)
+// expect: (expr (= a 1))
+// expect: (expr (= a (= b 2)))

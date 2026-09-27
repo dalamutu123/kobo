@@ -1,0 +1,3 @@
+# A scanner produces no output of its own, so phase 1 is marked through the token dump
+# specified in docs/language-spec.md section 6.1. Without this flag the suite marks nothing.
+--tokens

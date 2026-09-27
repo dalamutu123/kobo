@@ -1,0 +1,15 @@
+and else false fun if nil or print return true var while
+
+// expect: [line 1] AND 'and'
+// expect: [line 1] ELSE 'else'
+// expect: [line 1] FALSE 'false'
+// expect: [line 1] FUN 'fun'
+// expect: [line 1] IF 'if'
+// expect: [line 1] NIL 'nil'
+// expect: [line 1] OR 'or'
+// expect: [line 1] PRINT 'print'
+// expect: [line 1] RETURN 'return'
+// expect: [line 1] TRUE 'true'
+// expect: [line 1] VAR 'var'
+// expect: [line 1] WHILE 'while'
+// expect: [line 1] EOF ''

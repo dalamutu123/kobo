@@ -1,0 +1,2 @@
+fun f { print 1; }
+// [line 1] Error at '{': Expect '(' after function name.

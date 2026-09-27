@@ -1,0 +1,10 @@
+fun takes_one(a) {
+  return a;
+}
+
+fun caller() {
+  return takes_one();
+}
+
+print caller();
+// [line 6] Runtime error: Expected 1 arguments but got 0.

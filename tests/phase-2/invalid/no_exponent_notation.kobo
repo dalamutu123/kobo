@@ -1,0 +1,2 @@
+print 1e308;
+// [line 1] Error at 'e308': Expect ';' after value.

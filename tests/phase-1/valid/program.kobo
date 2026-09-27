@@ -1,0 +1,24 @@
+fun square(n) {
+  return n * n;
+}
+print square(7);
+
+// expect: [line 1] FUN 'fun'
+// expect: [line 1] IDENTIFIER 'square'
+// expect: [line 1] LPAREN '('
+// expect: [line 1] IDENTIFIER 'n'
+// expect: [line 1] RPAREN ')'
+// expect: [line 1] LBRACE '{'
+// expect: [line 2] RETURN 'return'
+// expect: [line 2] IDENTIFIER 'n'
+// expect: [line 2] STAR '*'
+// expect: [line 2] IDENTIFIER 'n'
+// expect: [line 2] SEMICOLON ';'
+// expect: [line 3] RBRACE '}'
+// expect: [line 4] PRINT 'print'
+// expect: [line 4] IDENTIFIER 'square'
+// expect: [line 4] LPAREN '('
+// expect: [line 4] NUMBER '7'
+// expect: [line 4] RPAREN ')'
+// expect: [line 4] SEMICOLON ';'
+// expect: [line 4] EOF ''

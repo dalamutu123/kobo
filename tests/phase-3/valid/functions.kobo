@@ -1,0 +1,12 @@
+fun add(a, b) {
+  return a + b;
+}
+
+fun shout() {
+  print "loud";
+}
+
+print add(1, 2);           // expect: 3
+print add("x", "y");       // expect: xy
+print shout();             // expect: loud
+                           // expect: nil

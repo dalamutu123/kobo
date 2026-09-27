@@ -1,0 +1,4 @@
+fun f() {
+  return 1
+}
+// [line 3] Error at '}': Expect ';' after return value.

@@ -1,0 +1,8 @@
+print 1;
+
+
+
+// expect: [line 1] PRINT 'print'
+// expect: [line 1] NUMBER '1'
+// expect: [line 1] SEMICOLON ';'
+// expect: [line 1] EOF ''

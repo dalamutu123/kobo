@@ -1,0 +1,2 @@
+print 5.;
+// [line 1] Error: Character is not part of any token.

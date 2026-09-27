@@ -1,0 +1,9 @@
+print 1 < 2 == true;
+print 1 + 2 >= 3;
+print "a" != "b";
+print 1 * 2 < 3 + 4;
+
+// expect: (print (== (< 1 2) true))
+// expect: (print (>= (+ 1 2) 3))
+// expect: (print (!= "a" "b"))
+// expect: (print (< (* 1 2) (+ 3 4)))

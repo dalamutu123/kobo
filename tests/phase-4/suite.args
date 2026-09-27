@@ -1,0 +1,4 @@
+# Phase 4 marks the bytecode compiler and the stack VM, so it is read through --vm.
+# The same programs must also pass on the tree-walking interpreter: the two engines
+# print the same thing for every program, and that is checked when work is marked.
+--vm

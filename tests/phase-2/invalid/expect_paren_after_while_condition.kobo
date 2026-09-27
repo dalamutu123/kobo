@@ -1,0 +1,2 @@
+while (true print 1;
+// [line 1] Error at 'print': Expect ')' after while condition.

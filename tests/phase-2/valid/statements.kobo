@@ -1,0 +1,11 @@
+1 + 2 * 3;
+print "hi";
+var x = 3;
+var y;
+{ }
+
+// expect: (expr (+ 1 (* 2 3)))
+// expect: (print "hi")
+// expect: (var x 3)
+// expect: (var y)
+// expect: (block)
