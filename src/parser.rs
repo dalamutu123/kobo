@@ -54,10 +54,43 @@ impl Parser {
     }
 
     fn fun_declaration(&mut self) -> Parsed<Stmt> {
-        // TODO(you): spec 3.1: a function declaration, its parameter list, and its body.
-        //            Functions are hoisted into Program::functions.
-        todo!("fun_declaration")
-    }
+        let name = self.consume(TokenType::Identifier, "Expect function name.")?;
+        self.consume(TokenType::LParen, "Expect '(' after function name.")?;
+
+        let mut parameters = Vec::new();
+
+        if !self.check(TokenType::RParen) {
+            loop {
+                let param = self.consume(TokenType::Identifier, "Expect parameter name.")?;
+                parameters.push(param.lexeme);
+
+                if !self.matches(&[TokenType::Comma]) {
+                    break;
+                }
+            }
+        }
+
+        self.consume(TokenType::RParen, "Expect ')' after parameters.")?;
+        self.consume(TokenType::LBrace, "Expect '{' before function body.")?;
+
+        let body = self.block()?;
+
+        let function = Function {
+            name: name.lexeme.clone(),
+            params: parameters,
+            body,
+            line: name.line,
+        };
+
+        let index = self.program.functions.len();
+        self.program.functions.push(function);
+
+        Ok(Stmt::Function {
+            index,
+            name: name.lexeme,
+            slot: None,
+        })
+}
 
     fn var_declaration(&mut self) -> Parsed<Stmt> {
         
