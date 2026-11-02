@@ -197,8 +197,16 @@ impl Parser {
     /// The `{` is already consumed. A block holds declarations, not statements (spec
     /// section 3.1).
     fn block(&mut self) -> Parsed<Vec<Stmt>> {
-        // TODO(you): spec 3.1: '{' declaration* '}'
-        todo!("block")
+        let mut statements = Vec::new();
+
+    while !self.check(TokenType::RBrace) && !self.at_end() {        
+            let stmt = self.declaration()?;
+            statements.push(stmt);
+        }
+
+        self.consume(TokenType::RBrace, "Expect '}' after block.")?;
+
+        Ok(statements)
     }
 
     // --- expressions, lowest precedence first --------------------------------------
