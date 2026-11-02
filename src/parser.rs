@@ -180,8 +180,18 @@ impl Parser {
     }
 
     fn while_statement(&mut self) -> Parsed<Stmt> {
-        // TODO(you): spec 3.1: 'while' '(' expression ')' statement
-        todo!("while_statement")
+       self.consume(TokenType::LParen, "Expect '(' after 'while'.")?;
+
+        let condition = self.expression()?;
+
+        self.consume(TokenType::RParen, "Expect ')' after while condition.")?;
+
+        let body = Box::new(self.statement_inner()?);
+
+        Ok(Stmt::While { 
+            condition,
+            body,
+        })
     }
 
     /// The `{` is already consumed. A block holds declarations, not statements (spec
