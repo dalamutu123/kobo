@@ -1,6 +1,6 @@
 use crate::ast::{Expr, Function, Program, Resolved, Stmt};
 use crate::token::{one_line, Token, TokenType};
-use crate::value::Value;
+use crate::value::{self, Value};
 
 /// Recursive descent: one function per grammar rule, and their call order is the
 /// precedence table.
@@ -116,25 +116,37 @@ impl Parser {
     }
 
     fn statement_inner(&mut self) -> Parsed<Stmt> {
-        // TODO(you): spec 3.1: pick the statement by its leading token.
-        // TEMPORARY: lets the rules below run until you write this one.
-        // Named, so an `if` is not misreported as a broken expression.
-        if self.check(TokenType::LBrace) || self.check(TokenType::If)
-            || self.check(TokenType::While) || self.check(TokenType::Return)
-        {
-            self.error("This statement form is not written yet.");
-            return Err(());
-        }
         if self.matches(&[TokenType::Print]) {
             let value = self.expression()?;
             self.consume(TokenType::Semicolon, "Expect ';' after value.")?;
-            Ok(Stmt::Print(value))
-        } else {
-            let expr = self.expression()?;
-            self.consume(TokenType::Semicolon, "Expect ';' after expression.")?;
-            Ok(Stmt::Expression(expr))
+            return Ok(Stmt::Print(value));
         }
-    }
+
+        if self.matches(&[TokenType::LBrace]) {
+            let body = self.block()?;
+            return Ok(Stmt::Block {
+            body,
+            locals: 0,
+            });
+        }
+
+        if self.matches(&[TokenType::If]) {
+            return self.if_statement();
+        }
+
+        if self.matches(&[TokenType::While]) {
+            return self.while_statement();
+        }
+
+        if self.matches(&[TokenType::Return]) {
+            return self.return_statement();
+        }
+
+        let expr = self.expression()?;
+        self.consume(TokenType::Semicolon, "Expect ';' after expression.")?;
+        Ok(Stmt::Expression(expr))
+}
+
 
     fn return_statement(&mut self) -> Parsed<Stmt> {
         // TODO(you): spec 3.1: 'return' expression? ';'
