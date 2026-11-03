@@ -263,9 +263,18 @@ impl Parser {
     }
 
     fn and(&mut self) -> Parsed<Expr> {
-        // TODO(you): spec 3.2, one rung of the precedence ladder.
-        // TEMPORARY: lets the rules below run until you write this one.
-        self.equality()
+        let mut expr = self.equality()?;
+        
+        while self.matches(&[TokenType::And]) {
+            let op = self.previous().clone();
+            let right = self.equality()?;
+            expr = Expr::Logical {
+                left: Box::new(expr),
+                op,
+                right: Box::new(right),
+            };
+        }
+        Ok(expr)
     }
 
     fn equality(&mut self) -> Parsed<Expr> {
