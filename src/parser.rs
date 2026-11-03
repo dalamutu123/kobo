@@ -278,9 +278,22 @@ impl Parser {
     }
 
     fn equality(&mut self) -> Parsed<Expr> {
-        // TODO(you): spec 3.2, one rung of the precedence ladder.
-        // TEMPORARY: lets the rules below run until you write this one.
-        self.comparison()
+        let mut expr = self.comparison()?;
+
+        while self.matches(&[
+        TokenType::BangEqual,
+        TokenType::EqualEqual,
+        ]) {
+            let op = self.previous().clone();
+            let right = self.comparison()?;
+
+            expr = Expr::Binary {
+                left: Box::new(expr),
+                op,
+                right: Box::new(right),
+            };
+        }
+        Ok(expr)
     }
 
     fn comparison(&mut self) -> Parsed<Expr> {
