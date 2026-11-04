@@ -110,7 +110,12 @@ impl Parser {
 
     fn statement(&mut self) -> Parsed<Stmt> {
         self.depth += 1;
-        let result = self.statement_inner();
+        let result = if self.depth > MAX_NESTING {
+                self.error("Too deeply nested.");
+                Err(())
+        } else {
+            self.statement_inner()
+        };
         self.depth -= 1;
         result
     }
@@ -168,7 +173,7 @@ impl Parser {
         let then_branch = Box::new(self.statement_inner()?);
 
         let else_branch = if self.matches(&[TokenType::Else]) {
-            Some(Box::new(self.statement_inner()?))
+            Some(Box::new(self.statement()?))
         } else {
             None
         };
@@ -186,7 +191,7 @@ impl Parser {
 
         self.consume(TokenType::RParen, "Expect ')' after while condition.")?;
 
-        let body = Box::new(self.statement_inner()?);
+        let body = Box::new(self.statement()?);
 
         Ok(Stmt::While { 
             condition,
@@ -229,7 +234,6 @@ impl Parser {
         let expr = self.or()?;
 
         if self.matches(&[TokenType::Equal]) {
-            let equals = self.previous().clone();
             let value = self.assignment()?;
 
             match expr {
@@ -240,7 +244,10 @@ impl Parser {
                         at,
                     })
                 }
-                _ => Err(self.error( "Invalid assignment target.")),
+                _ => {
+                    self.error("Invalid assignment target.");
+                    Err(())
+                },
             }
         } else {
             Ok(expr)
