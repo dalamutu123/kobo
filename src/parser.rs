@@ -447,14 +447,23 @@ impl Parser {
     /// statement (spec section 5.2). It always steps over at least one token first: a
     /// recovery that could stand still would hang on the token that caused the error.
     fn synchronise(&mut self) {
-        // TODO(you): spec 5.2: after an error, discard tokens until just past a ';' or on a
-        //            statement keyword, so one mistake costs one message.
-        // TEMPORARY: lets the rules below run until you write this one.
         self.depth = 0;
+
         while !self.at_end() {
             self.current += 1;
+
             if self.previous().kind == TokenType::Semicolon {
                 return;
+            }
+
+            match self.peek().kind {
+                TokenType::Fun
+                | TokenType::Var
+                | TokenType::If
+                | TokenType::While
+                | TokenType::Print
+                | TokenType::Return => return,
+                _ => {}
             }
         }
     }
